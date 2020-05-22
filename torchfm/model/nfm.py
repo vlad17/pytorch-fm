@@ -28,5 +28,5 @@ class NeuralFactorizationMachineModel(torch.nn.Module):
         :param v: Float tensor of size ``(batch_size, num_fields)``
         """
         cross_term = self.fm(self.embedding(x, v))
-        x = self.linear(x) + self.mlp(cross_term)
+        x = self.linear(x, v) + self.mlp(cross_term)
         return torch.sigmoid(x.squeeze(1))

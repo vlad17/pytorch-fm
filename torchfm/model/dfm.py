@@ -25,5 +25,5 @@ class DeepFactorizationMachineModel(torch.nn.Module):
         :param v: Float tensor of size ``(batch_size, num_fields)``
         """
         embed_x = self.embedding(x, v)
-        x = self.linear(x) + self.fm(embed_x) + self.mlp(embed_x.view(-1, self.embed_output_dim))
+        x = self.linear(x, v) + self.fm(embed_x) + self.mlp(embed_x.view(-1, self.embed_output_dim))
         return torch.sigmoid(x.squeeze(1))

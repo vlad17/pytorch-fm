@@ -80,5 +80,5 @@ class AdaptiveFactorizationNetwork(torch.nn.Module):
         """
         embed_x = self.embedding(x, v)
         lnn_out = self.LNN(embed_x)
-        x = self.linear(x) + self.mlp(lnn_out)
+        x = self.linear(x, v) + self.mlp(lnn_out)
         return torch.sigmoid(x.squeeze(1))

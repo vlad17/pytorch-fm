@@ -56,7 +56,7 @@ class FieldAwareFactorizationMachine(torch.nn.Module):
         :param v: Float tensor of size ``(batch_size, num_fields)``
         """
         x = x + x.new_tensor(self.offsets).unsqueeze(0)
-        xs = [self.embeddings[i](x) * v for i in range(self.num_fields)]
+        xs = [self.embeddings[i](x) * v.unsqueeze(-1) for i in range(self.num_fields)]
         ix = list()
         for i in range(self.num_fields - 1):
             for j in range(i + 1, self.num_fields):

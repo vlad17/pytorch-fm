@@ -5,7 +5,6 @@ from collections import defaultdict
 from functools import lru_cache
 from pathlib import Path
 
-import lmdb
 import numpy as np
 import torch.utils.data
 
@@ -40,10 +39,10 @@ class SparseDataset(torch.utils.data.Dataset):
         self.X.sort_indices()
         if not quiet:
             print('casting to int')
-            self.Xint = self.X.data.astype(np.uint32)
+        self.Xint = self.X.data.astype(np.uint32)
         if not quiet:
             print('casting to float')
-            self.X = self.X.astype(np.float32)
+        self.X = self.X.astype(np.float32)
         self.field_dims = np.asarray(field_dims, dtype=np.uint32)
         self.with_fields = self.field_dims > 1
         self.num_fields = len(field_dims)
@@ -58,8 +57,8 @@ class SparseDataset(torch.utils.data.Dataset):
         start, stop = self.X.indptr[index], self.X.indptr[index + 1]
         col_idxs = self.X.indices[start:stop]
 
-        fields = np.zeros(self.num_fields, astype=np.uint32)
-        values = np.zeros(self.num_fields, astype=np.float32)
+        fields = np.zeros(self.num_fields, dtype=np.int64)
+        values = np.zeros(self.num_fields, dtype=np.float32)
 
         which_cols_have_fields = self.with_fields[col_idxs]
         fields_for_cols_with_fields = self.Xint[start:stop][which_cols_have_fields]
