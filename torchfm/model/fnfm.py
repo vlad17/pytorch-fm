@@ -20,11 +20,12 @@ class FieldAwareNeuralFactorizationMachineModel(torch.nn.Module):
         self.dropout = torch.nn.Dropout(dropouts[0])
         self.mlp = MultiLayerPerceptron(self.ffm_output_dim, mlp_dims, dropouts[1])
 
-    def forward(self, x):
+    def forward(self, x, v):
         """
         :param x: Long tensor of size ``(batch_size, num_fields)``
+        :param v: Float tensor of size ``(batch_size, num_fields)``
         """
-        cross_term = self.ffm(x).view(-1, self.ffm_output_dim)
+        cross_term = self.ffm(x, v).view(-1, self.ffm_output_dim)
         cross_term = self.bn(cross_term)
         cross_term = self.dropout(cross_term)
         x = self.linear(x) + self.mlp(cross_term)

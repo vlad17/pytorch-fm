@@ -26,6 +26,7 @@ class AvazuDataset(torch.utils.data.Dataset):
     """
 
     def __init__(self, dataset_path=None, cache_path='.avazu', rebuild_cache=False, min_threshold=4):
+        raise ValueError
         self.NUM_FEATS = 22
         self.min_threshold = min_threshold
         if rebuild_cache or not Path(cache_path).exists():

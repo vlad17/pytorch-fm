@@ -29,11 +29,12 @@ class AutomaticFeatureInteractionModel(torch.nn.Module):
         if self.has_residual:
             self.V_res_embedding = torch.nn.Linear(embed_dim, atten_embed_dim)
 
-    def forward(self, x):
+    def forward(self, x, v):
         """
         :param x: Long tensor of size ``(batch_size, num_fields)``
+        :param v: Vloat tensor of size ``(batch_size, num_fields)``
         """
-        embed_x = self.embedding(x)
+        embed_x = self.embedding(x, v)
         atten_x = self.atten_embedding(embed_x)
         cross_term = atten_x.transpose(0, 1)
         for self_attn in self.self_attns:
@@ -43,5 +44,5 @@ class AutomaticFeatureInteractionModel(torch.nn.Module):
             V_res = self.V_res_embedding(embed_x)
             cross_term += V_res
         cross_term = F.relu(cross_term).contiguous().view(-1, self.atten_output_dim)
-        x = self.linear(x) + self.attn_fc(cross_term) + self.mlp(embed_x.view(-1, self.embed_output_dim))
+        x = self.linear(x, v) + self.attn_fc(cross_term) + self.mlp(embed_x.view(-1, self.embed_output_dim))
         return torch.sigmoid(x.squeeze(1))

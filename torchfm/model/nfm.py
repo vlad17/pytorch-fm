@@ -22,10 +22,11 @@ class NeuralFactorizationMachineModel(torch.nn.Module):
         )
         self.mlp = MultiLayerPerceptron(embed_dim, mlp_dims, dropouts[1])
 
-    def forward(self, x):
+    def forward(self, x, v):
         """
         :param x: Long tensor of size ``(batch_size, num_fields)``
+        :param v: Float tensor of size ``(batch_size, num_fields)``
         """
-        cross_term = self.fm(self.embedding(x))
+        cross_term = self.fm(self.embedding(x, v))
         x = self.linear(x) + self.mlp(cross_term)
         return torch.sigmoid(x.squeeze(1))

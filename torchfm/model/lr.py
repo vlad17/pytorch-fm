@@ -12,8 +12,9 @@ class LogisticRegressionModel(torch.nn.Module):
         super().__init__()
         self.linear = FeaturesLinear(field_dims)
 
-    def forward(self, x):
+    def forward(self, x, v):
         """
         :param x: Long tensor of size ``(batch_size, num_fields)``
+        :param v: Float tensor of size ``(batch_size, num_fields)``
         """
-        return torch.sigmoid(self.linear(x).squeeze(1))
+        return torch.sigmoid(self.linear(x, v).squeeze(1))

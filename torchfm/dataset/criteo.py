@@ -30,6 +30,7 @@ class CriteoDataset(torch.utils.data.Dataset):
     """
 
     def __init__(self, dataset_path=None, cache_path='.criteo', rebuild_cache=False, min_threshold=10):
+        raise ValueError
         self.NUM_FEATS = 39
         self.NUM_INT_FEATS = 13
         self.min_threshold = min_threshold

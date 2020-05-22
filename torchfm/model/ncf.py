@@ -19,11 +19,12 @@ class NeuralCollaborativeFiltering(torch.nn.Module):
         self.mlp = MultiLayerPerceptron(self.embed_output_dim, mlp_dims, dropout, output_layer=False)
         self.fc = torch.nn.Linear(mlp_dims[-1] + embed_dim, 1)
 
-    def forward(self, x):
+    def forward(self, x, v):
         """
         :param x: Long tensor of size ``(batch_size, num_user_fields)``
+        :param v: Float tensor of size ``(batch_size, num_user_fields)``
         """
-        x = self.embedding(x)
+        x = self.embedding(x, v)
         user_x = x[:, self.user_field_idx].squeeze(1)
         item_x = x[:, self.item_field_idx].squeeze(1)
         x = self.mlp(x.view(-1, self.embed_output_dim))

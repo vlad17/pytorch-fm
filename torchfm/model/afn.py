@@ -29,7 +29,7 @@ class LNN(torch.nn.Module):
         else:
             self.register_parameter('bias', None)
         self.reset_parameters()
-    
+
     def reset_parameters(self):
         stdv = 1. / math.sqrt(self.weight.size(1))
         self.weight.data.uniform_(-stdv, stdv)
@@ -73,12 +73,12 @@ class AdaptiveFactorizationNetwork(torch.nn.Module):
         self.LNN = LNN(self.num_fields, embed_dim, LNN_dim)
         self.mlp = MultiLayerPerceptron(self.LNN_output_dim, mlp_dims, dropouts[0])
 
-    def forward(self, x):
+    def forward(self, x, v):
         """
         :param x: Long tensor of size ``(batch_size, num_fields)``
+        :param v: Float tensor of size ``(batch_size, num_fields)``
         """
-        embed_x = self.embedding(x)
+        embed_x = self.embedding(x, v)
         lnn_out = self.LNN(embed_x)
         x = self.linear(x) + self.mlp(lnn_out)
         return torch.sigmoid(x.squeeze(1))
-

@@ -17,6 +17,7 @@ class MovieLens20MDataset(torch.utils.data.Dataset):
     """
 
     def __init__(self, dataset_path, sep=',', engine='c', header='infer'):
+        raise ValueError
         data = pd.read_csv(dataset_path, sep=sep, engine=engine, header=header).to_numpy()[:, :3]
         self.items = data[:, :2].astype(np.int) - 1  # -1 because ID begins from 1
         self.targets = self.__preprocess_target(data[:, 2]).astype(np.float32)

@@ -25,11 +25,12 @@ class ProductNeuralNetworkModel(torch.nn.Module):
         self.embed_output_dim = num_fields * embed_dim
         self.mlp = MultiLayerPerceptron(num_fields * (num_fields - 1) // 2 + self.embed_output_dim, mlp_dims, dropout)
 
-    def forward(self, x):
+    def forward(self, x, v):
         """
         :param x: Long tensor of size ``(batch_size, num_fields)``
+        :param v: Float tensor of size ``(batch_size, num_fields)``
         """
-        embed_x = self.embedding(x)
+        embed_x = self.embedding(x, v)
         cross_term = self.pn(embed_x)
         x = torch.cat([embed_x.view(-1, self.embed_output_dim), cross_term], dim=1)
         x = self.mlp(x)
